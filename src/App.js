@@ -1,24 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import FoodBox from './components/FoodBox';
+import AddFoodForm from './components/FoodForm';
+import Search from './components/Search';
+import foods from "./foods.json";
+import { useState } from 'react';
+
+import { Divider, Input, Col, Row } from 'antd';
 
 function App() {
+
+  const [foodInfo, setFoods] = useState(foods)
+
+  const addFood = (foodForm) => {
+    const newFood = [foodForm,...foodInfo]
+    setFoods(newFood)
+  }
+
+  const deleteFood = (foodName) =>{
+    const filterFood = foodInfo.filter((element) =>{
+      return element.name !== foodName
+    })
+
+    setFoods(filterFood)
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <Row>
+    <h1>Food List</h1>
+      <Search />
+
+      <AddFoodForm  CreateFood={addFood} />
+
+        {foodInfo.map((element, index) => {
+          return(
+            <div>
+              {element ?
+              (<FoodBox details={element} key={index} deleteFood={deleteFood}/>)
+              : (<h3>We don't have any more food ! Please Create one !</h3>)}
+            </div>
+          )
+        })}
+        </Row>
     </div>
+    
   );
 }
 
